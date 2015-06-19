@@ -6,11 +6,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service("sampleUserDetailsService")
+@Service
 public class SampleUserDetailsService implements UserDetailsService { // (1)
 
-    private final String CORRECT_USERNAME = "demo";
-    private final String CORRECT_PASSWORD = "demo";
+    private static final String CORRECT_USERNAME = "demo";
+    private static final String CORRECT_PASSWORD = "demo";
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

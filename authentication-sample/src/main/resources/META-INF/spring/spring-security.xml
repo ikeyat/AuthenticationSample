@@ -1,80 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.example.security" />
+    <context:component-scan base-package="com.example.security"/>
 
     <sec:http pattern="/resources/**" security="none"/>
     <sec:http auto-config="true" use-expressions="true">
         <sec:headers>
-            <sec:cache-control />
-            <sec:content-type-options />
-            <sec:hsts />
-            <sec:frame-options />
-            <sec:xss-protection />
+            <sec:cache-control/>
+            <sec:content-type-options/>
+            <sec:hsts/>
+            <sec:frame-options/>
+            <sec:xss-protection/>
         </sec:headers>
-        <sec:csrf />
+        <sec:csrf/>
         <sec:access-denied-handler ref="accessDeniedHandler"/>
         <sec:custom-filter ref="userIdMDCPutFilter" after="ANONYMOUS_FILTER"/>
-        <sec:session-management />
+        <!--<sec:custom-filter ref="dummyUsernameHeaderFilter" before="PRE_AUTH_FILTER"/>-->
+        <sec:custom-filter position="PRE_AUTH_FILTER" ref="ssoSamplePreAuthenticatedFilter"/>
+        <sec:session-management/>
         <sec:form-login
                 login-page="/login.jsp"
                 authentication-failure-url="/login.jsp?error=true"
-                login-processing-url="/authenticate" />
+                login-processing-url="/authenticate"/>
         <sec:logout
                 logout-url="/logout"
                 logout-success-url="/"
-                delete-cookies="JSESSIONID" />
-        <sec:intercept-url pattern="/login.jsp" access="permitAll" />
-        <sec:intercept-url pattern="/**" access="isAuthenticated()" />
+                delete-cookies="JSESSIONID"/>
+        <sec:intercept-url pattern="/login.jsp" access="permitAll"/>
+        <sec:intercept-url pattern="/**" access="isAuthenticated()"/>
 
     </sec:http>
 
-    <sec:authentication-manager>
+    <bean id="ssoSamplePreAuthenticatedFilter"
+          class="com.example.security.filter.SsoSamplePreAuthenticatedFilter">
+        <property name="authenticationManager" ref="authenticationManager" />
+    </bean>
+
+    <sec:authentication-manager alias="authenticationManager">
         <!-- com.example.security.domain.service.userdetails.SampleUserDetailsService
           is scanned by component scan with @Service -->
         <sec:authentication-provider
-                user-service-ref="sampleUserDetailsService" />
+                user-service-ref="sampleUserDetailsService"/>
+        <sec:authentication-provider
+                ref="preAuthenticatedUserDetailsService"/>
     </sec:authentication-manager>
+
+    <bean id="preAuthenticatedUserDetailsService"
+          class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
+        <property name="preAuthenticatedUserDetailsService" ref="ssoSampleUserDetailsService"/>
+    </bean>
 
     <!-- Change View for CSRF or AccessDenied -->
     <bean id="accessDeniedHandler"
-        class="org.springframework.security.web.access.DelegatingAccessDeniedHandler">
+          class="org.springframework.security.web.access.DelegatingAccessDeniedHandler">
         <constructor-arg index="0">
             <map>
                 <entry
-                    key="org.springframework.security.web.csrf.InvalidCsrfTokenException">
+                        key="org.springframework.security.web.csrf.InvalidCsrfTokenException">
                     <bean
-                        class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+                            class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
                         <property name="errorPage"
-                            value="/WEB-INF/views/common/error/invalidCsrfTokenError.jsp" />
+                                  value="/WEB-INF/views/common/error/invalidCsrfTokenError.jsp"/>
                     </bean>
                 </entry>
                 <entry
-                    key="org.springframework.security.web.csrf.MissingCsrfTokenException">
+                        key="org.springframework.security.web.csrf.MissingCsrfTokenException">
                     <bean
-                        class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+                            class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
                         <property name="errorPage"
-                            value="/WEB-INF/views/common/error/missingCsrfTokenError.jsp" />
+                                  value="/WEB-INF/views/common/error/missingCsrfTokenError.jsp"/>
                     </bean>
                 </entry>
             </map>
         </constructor-arg>
         <constructor-arg index="1">
             <bean
-                class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+                    class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
                 <property name="errorPage"
-                    value="/WEB-INF/views/common/error/accessDeniedError.jsp" />
+                          value="/WEB-INF/views/common/error/accessDeniedError.jsp"/>
             </bean>
         </constructor-arg>
     </bean>
 
     <!-- Put UserID into MDC -->
     <bean id="userIdMDCPutFilter" class="org.terasoluna.gfw.security.web.logging.UserIdMDCPutFilter">
+    </bean>
+
+    <bean id="dummyUsernameHeaderFilter" class="com.example.security.filter.DummyUsernameHeaderFilter">
+        <property name="username" value="hoge" />
     </bean>
 
 </beans>
