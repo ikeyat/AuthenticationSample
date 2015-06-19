@@ -9,7 +9,7 @@
     <import resource="classpath:META-INF/spring/authentication-sample-infra.xml" />
     <import resource="classpath*:META-INF/spring/**/*-codelist.xml" />
 
-    <context:component-scan base-package="com.exapmle.domain" />
+    <context:component-scan base-package="com.example.domain" />
 
     <!-- AOP. -->
     <bean id="resultMessagesLoggingInterceptor"
