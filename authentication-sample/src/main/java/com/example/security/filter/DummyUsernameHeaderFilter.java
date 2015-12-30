@@ -20,6 +20,8 @@ public class DummyUsernameHeaderFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory
             .getLogger(DummyUsernameHeaderFilter.class);
 
+    private String headerName;
+
     private String username;
 
     public String getUsername() {
@@ -30,13 +32,17 @@ public class DummyUsernameHeaderFilter extends OncePerRequestFilter {
         this.username = username;
     }
 
+    public void setHeaderName(String headerName) {
+        this.headerName = headerName;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         HttpServletRequest wrappedRequest = new HttpServletRequestWrapper(httpServletRequest) {
             @Override
             public String getHeader(String name) {
                 String ret = super.getHeader(name);
-                if (SsoSamplePreAuthenticatedFilter.HEADER_NAME.equals(name)
+                if (headerName.equals(name)
                         && StringUtils.isEmpty(ret)) {
                     logger.debug("dummy header is returned: {}: {}", name, username);
                     return username;

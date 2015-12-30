@@ -34,7 +34,7 @@ public class HomeController {
     /**
      * Simply selects the home view to render by returning its name.
      */
-    @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/page", method = {RequestMethod.GET, RequestMethod.POST})
     public String home(Locale locale, Model model, @AuthenticationPrincipal SampleUserDetails user) {
         logger.info("Welcome home! The client locale is {}.", locale);
 
@@ -50,4 +50,10 @@ public class HomeController {
         return "welcome/home";
     }
 
+    @RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
+    public String home(Model model, @AuthenticationPrincipal SampleUserDetails user) {
+        model.addAttribute("userName", user.getAccount().getUsername());
+
+        return "welcome/entry";
+    }
 }
