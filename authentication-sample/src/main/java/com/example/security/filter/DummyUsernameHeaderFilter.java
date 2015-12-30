@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * Please enable this when you try to insert user info into HTTP Header.
  * Created by ikeya on 15/06/20.
  */
 public class DummyUsernameHeaderFilter extends OncePerRequestFilter {

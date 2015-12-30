@@ -22,6 +22,7 @@
         <sec:csrf/>
         <sec:access-denied-handler ref="accessDeniedHandler"/>
         <sec:custom-filter ref="userIdMDCPutFilter" after="ANONYMOUS_FILTER"/>
+        <!-- comment out below code if you try Header authentication -->
         <!--<sec:custom-filter ref="dummyUsernameHeaderFilter" before="PRE_AUTH_FILTER"/>-->
         <sec:custom-filter position="PRE_AUTH_FILTER" ref="ssoSamplePreAuthenticatedFilter"/>
         <sec:session-management/>
@@ -38,10 +39,17 @@
 
     </sec:http>
 
+    <!-- Use RequestHeaderAuthenticationFilter instead of SsoSamplePreAuthenticatedFilter -->
+    <!--<bean id="ssoSamplePreAuthenticatedFilter"-->
+          <!--class="com.example.security.filter.SsoSamplePreAuthenticatedFilter">-->
+        <!--<property name="authenticationManager" ref="authenticationManager" />-->
+    <!--</bean>-->
     <bean id="ssoSamplePreAuthenticatedFilter"
-          class="com.example.security.filter.SsoSamplePreAuthenticatedFilter">
+          class="org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter">
         <property name="authenticationManager" ref="authenticationManager" />
+        <property name="principalRequestHeader" value="username" />
     </bean>
+
 
     <sec:authentication-manager alias="authenticationManager">
         <!-- com.example.security.domain.service.userdetails.SampleUserDetailsService

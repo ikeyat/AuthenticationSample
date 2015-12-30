@@ -14,11 +14,11 @@
     <parent>
         <groupId>org.terasoluna.gfw</groupId>
         <artifactId>terasoluna-gfw-parent</artifactId>
-        <version>5.0.0.RELEASE</version>
+        <version>5.0.1.RELEASE</version>
     </parent>
 
     <properties>
-        <java-version>1.7</java-version>
+        <java-version>1.8</java-version>
         <org.codehaus.mojo.build-helper-maven-plugi.version>1.9.1</org.codehaus.mojo.build-helper-maven-plugi.version>
     </properties>
 
@@ -49,6 +49,22 @@
             </snapshots>
             <id>terasoluna-gfw-3rdparty</id>
             <url>http://repo.terasoluna.org/nexus/content/repositories/terasoluna-gfw-3rdparty/</url>
+        </repository>
+            <repository>
+                <id>spring-snapshots</id>
+                <name>Spring Snapshots</name>
+                <url>http://repo.spring.io/snapshot</url>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>http://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 

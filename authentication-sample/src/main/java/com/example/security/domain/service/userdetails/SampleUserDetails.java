@@ -5,15 +5,14 @@ import org.springframework.security.core.userdetails.User;
 
 import com.example.security.domain.model.Account;
 
-public class SampleUserDetails extends User { // (1)
+public class SampleUserDetails extends User {
     private static final long serialVersionUID = 1L;
 
-    private final Account account; // (2)
+    private final Account account;
 
     public SampleUserDetails(Account account) {
-        // (3)
         super(account.getUsername(), account.getPassword(), AuthorityUtils
-                .createAuthorityList("ROLE_USER")); // (4)
+                .createAuthorityList("ROLE_USER"));
         this.account = account;
     }
 

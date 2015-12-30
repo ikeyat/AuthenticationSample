@@ -10,6 +10,7 @@
     <div id="wrapper">
         <h1>Hello world!</h1>
         <p>The time on the server is ${serverTime}.</p>
+        <p>Username is ${userName}.</p>
         <p>
             <form:form action="${pageContext.request.contextPath}/logout">
                 <button>Logout</button>
