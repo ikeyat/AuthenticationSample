@@ -46,10 +46,16 @@
         <property name="authenticationSuccessHandler" ref="authenticationSuccessHandler" />
     </bean>
 
+    <!--<bean id="authenticationSuccessHandler"-->
+          <!--class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">-->
+        <!--<property name="defaultTargetUrl" value="/" />-->
+        <!--<property name="alwaysUseDefaultTargetUrl" value="true" />-->
+    <!--</bean>-->
+
     <bean id="authenticationSuccessHandler"
-          class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
-        <property name="defaultTargetUrl" value="/" />
-        <property name="alwaysUseDefaultTargetUrl" value="true" />
+          class="com.example.security.filter.RedirectToEntryAuthenticationSuccessHandler">
+        <property name="topUri" value="/" />
+        <property name="entryUrl" value="/?timeout" />
     </bean>
 
     <sec:authentication-manager alias="authenticationManager">
